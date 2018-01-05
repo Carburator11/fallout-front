@@ -1,0 +1,42 @@
+
+
+
+.play{
+    color: white;
+    text-align: center;    
+}
+
+.playground{
+    width: 800px;
+    height : 600px;
+    border: 1px solid purple;
+    background: rgb(56, 47, 47);
+
+    
+}
+
+.path {
+    width: 10px;
+    height : 10px;
+    background: rgb(172, 22, 22);
+    position: absolute;
+}
+
+.playerPos{
+    width: 10px;
+    height : 10px;
+    background: rgb(204, 170, 18);
+    position: absolute;
+}
+
+.playerPosNew{
+    width: 10px;
+    height : 10px;
+    background: rgb(81, 190, 7);
+    position: absolute;
+}
+
+.block{
+    border: 1px solid yellow;
+    position: absolute;
+}
