@@ -4,6 +4,7 @@ import PlayerPosNew from './game/PlayerPosNew.js';
 import Blocks from './game/Blocks.js';
 import NPC from './game/NPC.js';
 import Shot from './game/Shot.js';
+import Nuke from './game/Nuke.js';
 
 class Playground extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class Playground extends React.Component {
                    ];
         
         this.shotCount = 0;
+        this.check = [false, ''];
     }
 
     handleClick(e){
@@ -126,32 +128,60 @@ shoot(){
   newArray[this.shotCount] = newShoot;
   this.setState({ shot:  newArray  }) 
 
-  console.log("Firing " + this.state.shot[this.shotCount]);
+  //console.log("Firing " + this.state.shot[this.shotCount]);
   this.animateShoot(this.shotCount);
   this.shotCount++;
 
 }
 
-animateShoot(e){
-    // Hardcoded playground width below !
+checkImpact(e) {
+   
+  this.npc.map((el) =>{
+    var margin = 10;
+    var shotOnX = ( (this.state.shot[e][0] > ( el[0] - margin) ) && ( this.state.shot[e][0] < ( el[0] + el[2] + margin  ) ) );
+    var shotOnY = ( (this.state.shot[e][1] > ( el[1] - margin) ) && ( this.state.shot[e][1] < ( el[1] + el[3] + margin  ) ) );
+    if(shotOnX  &&  shotOnY){
+        this.check[0] = true;
+        this.check[1] = el[4];
+    }
+    return null ;
+  })
+}
 
+animateShoot(e){
+    
+    // 790 = Hardcoded playground width  !
     var intervID = setInterval(
       ()=>{
+        
+        //console.log('checkImpact');
+        this.checkImpact(e);
+
         if(this.state.shot[e][0] > 790){
-            console.log('Removing ' + this.state.shot[e]);
+            //console.log('Removing ' + this.state.shot[e]);
             clearInterval(intervID);
             let newArray = this.state.shot;
             delete newArray[e];
             this.setState({ shot:  newArray  });
-                          }
+            }
+
         else{
-            //console.log('increment' + this.shot[e][2])
-            let newArray = this.state.shot;
-            newArray[e][0] += 20;
-            this.setState({ shot:  newArray  })
-            
-           }                   
-      
+            if(this.check[0]){
+                console.log('Target shot - ' + this.check[1]);
+                clearInterval(intervID);
+                this.check = [false, ''];
+                let newArray = this.state.shot;
+                delete newArray[e];
+                this.setState({ shot:  newArray  });
+                }                  
+
+            else{
+                //console.log('increment' + this.shot[e][2])
+                let newArray = this.state.shot;
+                newArray[e][0] += 20;
+                this.setState({ shot:  newArray  });
+              }                   
+          }
       }, 50);
 
 
@@ -181,8 +211,12 @@ componentDidMount() {
       if(e.key === konami[count]){
               console.log("cheatSequence:  " + count + " " + e.key);
               if(e.key === konami[konami.length - 1]){
-                alert("KONAMI CHEAT MODE");
-                this.setState({cheatMode: true})  
+                //alert("KONAMI CHEAT MODE");
+                this.setState({cheatMode: true})
+                
+                setTimeout(
+                  ()=> { this.setState({cheatMode: false});console.log("end of nuke") }
+                , 1400)  
               }
               count++;
           }
@@ -210,9 +244,12 @@ componentDidMount() {
                 newX = {this.state.newX}
                 newY = {this.state.newY}
              />
+          
           <Blocks blocks =       { this.state.showBlocks?this.blocks:[] } />
           <NPC    npcPosition  = { this.npc } />
           <Shot   shotPosition = { this.state.shot} />
+          {this.state.cheatMode? <Nuke />:""}
+         
         </div>
       );
     }
