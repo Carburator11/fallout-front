@@ -40,3 +40,15 @@
     border: 1px solid yellow;
     position: absolute;
 }
+
+.npc{
+    width: 10px;
+    height : 10px;
+    background: yellow;
+    position: absolute;
+}
+
+.shot{
+    background: rgb(241, 166, 5);
+    position: absolute;
+}

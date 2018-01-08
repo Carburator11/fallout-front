@@ -2,7 +2,8 @@ import React from 'react';
 import Path from './game/Path.js';
 import PlayerPosNew from './game/PlayerPosNew.js';
 import Blocks from './game/Blocks.js';
-
+import NPC from './game/NPC.js';
+import Shot from './game/Shot.js';
 
 class Playground extends React.Component {
     constructor(props) {
@@ -14,12 +15,18 @@ class Playground extends React.Component {
                        newY:  340,
                        newDir: 'IDLE',
                        isIdle: true,
+                       showBlocks: false,
+                       cheatMode: false
                      };
         this.handleClick = this.handleClick.bind(this);
         this.blocks = [
                         [150, 150, 50, 80, "block1"],
                         [240, 240, 40, 40, "block2"]
                       ] ;
+        this.npc = [
+                        [500, 150, 25, 25, "cow1"]
+                   ];
+        this.shots = [];
         //blocks : [Xposition (css prop: left), Yposition (css prop: top), (css prop: width), (css prop: height), name (Id and Key)]
     }
 
@@ -33,35 +40,36 @@ class Playground extends React.Component {
         var correctedY = e.clientY;
 
         // We check in each block if Mouse position is inside a Block
-        blocks.map((blockItem) => {
-            var insideBlockX = (e.clientX >= blockItem[0]) && ( e.clientX <= ( blockItem[0]+ blockItem[2]) );
-            var insideBlockY = (e.clientY >= blockItem[1]) && ( e.clientY <= ( blockItem[1]+ blockItem[3]) );
-            
-            // If yes, we will update correctedX and Y
-            if( insideBlockX && insideBlockY)                    
-                  { 
-                    console.log("Inside " + blockItem[4] + " - correcting Path");
+        if(this.state.showBlocks){
+            blocks.map((blockItem) => {
+                var insideBlockX = (e.clientX >= blockItem[0]) && ( e.clientX <= ( blockItem[0]+ blockItem[2]) );
+                var insideBlockY = (e.clientY >= blockItem[1]) && ( e.clientY <= ( blockItem[1]+ blockItem[3]) );
+                
+                // If yes, we will update correctedX and Y
+                if( insideBlockX && insideBlockY)                    
+                      { 
+                        console.log("Inside " + blockItem[4] + " - correcting Path");
 
-                    /*  The function below checks the relative position of the player compared to the block     
-                                -1-1    0-1    1-1 
-                                -1 0  |block|  1 0
-                                -1 1    0 1    1 1
-                    */
+                        /*  The function below checks the relative position of the player compared to the block     
+                                    -1-1    0-1    1-1 
+                                    -1 0  |block|  1 0
+                                    -1 1    0 1    1 1
+                        */
 
-                      var testX = (this.state.newX - blockItem[0])
-                          if(testX < 0)                { /* case -1 */  correctedX = blockItem[0] - 5 }
-                          else if(testX > blockItem[2]){ /* case  1 */  correctedX = blockItem[0] +  blockItem[2] + 5  }
-                          else                         { /* case  0 */  correctedX = blockItem[0] + (blockItem[2] / 2) }  
+                          var testX = (this.state.newX - blockItem[0])
+                              if(testX < 0)                { /* case -1 */  correctedX = blockItem[0] - 5 }
+                              else if(testX > blockItem[2]){ /* case  1 */  correctedX = blockItem[0] +  blockItem[2] + 5  }
+                              else                         { /* case  0 */  correctedX = blockItem[0] + (blockItem[2] / 2) }  
 
-                      var testY = (this.state.newY - blockItem[1])
-                          if(testY < 0)                { /* case -1 */  correctedY = blockItem[1] - 5 }
-                          else if(testY > blockItem[3]){ /* case  1 */  correctedY = blockItem[1] +  blockItem[3] + 5  }
-                          else                         { /* case  0 */  correctedY = blockItem[1] + (blockItem[3] / 2) }  
-                   }
-       
-            return(null);            
-            })
-        
+                          var testY = (this.state.newY - blockItem[1])
+                              if(testY < 0)                { /* case -1 */  correctedY = blockItem[1] - 5 }
+                              else if(testY > blockItem[3]){ /* case  1 */  correctedY = blockItem[1] +  blockItem[3] + 5  }
+                              else                         { /* case  0 */  correctedY = blockItem[1] + (blockItem[3] / 2) }  
+                      }
+          
+                return(null);            
+                })
+              }
         this.setState({pathX: correctedX, pathY: correctedY, isActive: true }, 
           () => { this.checkPos() }
         )  
@@ -111,9 +119,54 @@ class Playground extends React.Component {
   );
 }
 
+shoot(){
+  this.shots.push([ this.state.newX, this.state.newY, "shot" ]);
+  
+
+}
+
+animateShoot(e){
+  
 
 
+}
 
+componentDidMount() {
+  
+  var count = 0
+  var konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a" ];
+
+  window.addEventListener("keydown", 
+    (e)=> {
+
+
+      if(e.key === "o"){
+      (this.state.showBlocks)?
+            this.setState({showBlocks: false})
+            :
+            this.setState({showBlocks: true})
+          }
+
+      if( (e.key === " ") || (e.key === "Enter") ){
+            console.log("shoot !");
+            this.shoot();
+          }      
+      
+      if(e.key === konami[count]){
+              console.log("cheatSequence:  " + count + " " + e.key);
+              if(e.key === konami[konami.length - 1]){
+                alert("KONAMI CHEAT MODE");
+                this.setState({cheatMode: true})  
+              }
+              count++;
+          }
+      else{ count = 0}
+      
+      
+
+      });
+
+    }
 
 
 
@@ -131,7 +184,9 @@ class Playground extends React.Component {
                 newX = {this.state.newX}
                 newY = {this.state.newY}
              />
-        <Blocks blocks = { this.blocks } />
+        <Blocks blocks =       { this.state.showBlocks?this.blocks:[] } />
+        <NPC    npcPosition  = { this.npc } />
+        <Shot   shotPosition = { this.shots} />
         </div>
       );
     }
