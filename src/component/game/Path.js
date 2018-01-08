@@ -1,6 +1,6 @@
 import React from 'react';
 
-
+// This component is just a visualization of the Path the player follows
 
 class Path extends React.Component {
     constructor(props) {

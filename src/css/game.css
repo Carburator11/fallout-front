@@ -22,14 +22,9 @@
     position: absolute;
 }
 
-.playerPos{
-    width: 10px;
-    height : 10px;
-    background: rgb(204, 170, 18);
-    position: absolute;
-}
 
-.playerPosNew{
+
+.playerPos{
     width: 10px;
     height : 10px;
     background: rgb(81, 190, 7);
