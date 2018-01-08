@@ -16,7 +16,8 @@ class Playground extends React.Component {
                        newDir: 'IDLE',
                        isIdle: true,
                        showBlocks: false,
-                       cheatMode: false
+                       cheatMode: false,
+                       shot: []
                      };
         this.handleClick = this.handleClick.bind(this);
         this.blocks = [
@@ -26,8 +27,8 @@ class Playground extends React.Component {
         this.npc = [
                         [500, 150, 25, 25, "cow1"]
                    ];
-        this.shots = [];
-        //blocks : [Xposition (css prop: left), Yposition (css prop: top), (css prop: width), (css prop: height), name (Id and Key)]
+        
+        this.shotCount = 0;
     }
 
     handleClick(e){
@@ -120,13 +121,38 @@ class Playground extends React.Component {
 }
 
 shoot(){
-  this.shots.push([ this.state.newX, this.state.newY, "shot" ]);
-  
+  let newArray = this.state.shot;
+  let newShoot = [ this.state.newX, this.state.newY, "shot"+this.shotCount ];
+  newArray[this.shotCount] = newShoot;
+  this.setState({ shot:  newArray  }) 
+
+  console.log("Firing " + this.state.shot[this.shotCount]);
+  this.animateShoot(this.shotCount);
+  this.shotCount++;
 
 }
 
 animateShoot(e){
-  
+    // Hardcoded playground width below !
+
+    var intervID = setInterval(
+      ()=>{
+        if(this.state.shot[e][0] > 790){
+            console.log('Removing ' + this.state.shot[e]);
+            clearInterval(intervID);
+            let newArray = this.state.shot;
+            delete newArray[e];
+            this.setState({ shot:  newArray  });
+                          }
+        else{
+            //console.log('increment' + this.shot[e][2])
+            let newArray = this.state.shot;
+            newArray[e][0] += 20;
+            this.setState({ shot:  newArray  })
+            
+           }                   
+      
+      }, 50);
 
 
 }
@@ -148,7 +174,7 @@ componentDidMount() {
           }
 
       if( (e.key === " ") || (e.key === "Enter") ){
-            console.log("shoot !");
+            
             this.shoot();
           }      
       
@@ -184,9 +210,9 @@ componentDidMount() {
                 newX = {this.state.newX}
                 newY = {this.state.newY}
              />
-        <Blocks blocks =       { this.state.showBlocks?this.blocks:[] } />
-        <NPC    npcPosition  = { this.npc } />
-        <Shot   shotPosition = { this.shots} />
+          <Blocks blocks =       { this.state.showBlocks?this.blocks:[] } />
+          <NPC    npcPosition  = { this.npc } />
+          <Shot   shotPosition = { this.state.shot} />
         </div>
       );
     }
