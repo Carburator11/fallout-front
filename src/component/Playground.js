@@ -21,9 +21,9 @@ class Playground extends React.Component {
                        cheatMode: false,
                        shot: [],
                        enemies: [
-                         [500, 150, 25, 25, "cow1"],
-                         [500, 350, 25, 25, "cow2"],
-                         [400, 400, 25, 25, "cow3"]]
+                         [500, 150, 50, 50, "cow1"],
+                         [500, 350, 50, 50, "cow2"],
+                         [400, 400, 50, 50, "cow3"]]
                      };
         this.handleClick = this.handleClick.bind(this);
         this.blocks = [

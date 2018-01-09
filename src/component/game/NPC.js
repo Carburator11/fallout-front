@@ -5,6 +5,7 @@
 // This component should be (or will be) renamed Enemies instead of NPC.js
 
 import React from 'react';
+import Cow from './Cow.js';
 
 export default function NPC(props){ 
 
@@ -17,6 +18,7 @@ export default function NPC(props){
         }}  className= "npc"
             id = { el[4]}
             key= { el[4]} >
+    <Cow />
     </div>
     );
 

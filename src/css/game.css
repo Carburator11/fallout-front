@@ -36,12 +36,7 @@
     position: absolute;
 }
 
-.npc{
-    width: 10px;
-    height : 10px;
-    background: yellow;
-    position: absolute;
-}
+
 
 .shot{
     background: rgb(241, 166, 5);
@@ -65,4 +60,26 @@
 
 #imgSprite{
     position: relative;
+}
+
+.npc{
+    width: 10px;
+    height : 10px;
+    position: absolute;
+    background: yellow;
+    
+}
+
+.cowDiv{
+    width: 150px;
+    height: 100px;
+    overflow: hidden;
+    position: absolute;
+    border: 1px solid purple;
+    margin-top:  -30px;
+    margin-left: -50px;
+}
+
+#cowSprite{
+    position: absolute;
 }
