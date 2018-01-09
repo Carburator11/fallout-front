@@ -100,14 +100,14 @@ class Playground extends React.Component {
         else if( diffX < 0   && diffY < 0   ){ if(this.state.isIdle){this.move("NW", -1, -1) } }
         else if( diffX === 0 && diffY === 0 ){ 
             this.setState({playerDir: "IDLE", isIdle:true});
-            console.log('IDLE');
+            //console.log('IDLE');
         }
   }
 
   move(dir, x, y){
       var incremX = x;
       var incremY = y;
-      console.log(dir);
+     
       var that = this;
 
       this.setState({isIdle : false}, 
@@ -131,10 +131,11 @@ class Playground extends React.Component {
 }
 
 shoot(){
+  //console.log('Shoot');
   let newArray = this.state.shot;
-  let newShoot = [ this.state.playerX, this.state.playerY, "shot"+this.shotCount ];
+  let newShoot = [ this.state.playerX +30, this.state.playerY -40 , "shot"+this.shotCount ];
   newArray[this.shotCount] = newShoot;
-  this.setState({ shot:  newArray  }) 
+  this.setState({ shot:  newArray, playerDir: "shoot"  }) 
   this.animateShoot(this.shotCount);
   this.shotCount++;
 }
@@ -161,6 +162,7 @@ checkImpact(e) {
 // Deleting an 'enemy' element in this.state.enemies deletes the 'enemy' from the DOM
 animateShoot(e){
     
+  setTimeout( ()=> this.setState({playerDir: 'IDLE'}), 500  );
     var intervID = setInterval(
       ()=>{
         
@@ -254,8 +256,10 @@ componentDidMount() {
 
            /> 
           <PlayerPos
-                playerX = {this.state.playerX}
-                playerY = {this.state.playerY}
+                playerX  = { this.state.playerX }
+                playerY  = { this.state.playerY }
+                action   = { this.state.playerDir }
+                playerId = { this.props.sessionId }
              />
           
           <Blocks blocks =       { this.state.showBlocks?this.blocks:[] } />

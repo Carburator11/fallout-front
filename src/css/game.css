@@ -52,3 +52,17 @@
     position: absolute;
     left: 200px;
 }
+
+.playerFrame{
+    width: 60px;
+    height: 70px;
+    overflow: hidden;
+    position: absolute;
+    top: -60px;
+    left: -30px;
+
+}
+
+#imgSprite{
+    position: relative;
+}

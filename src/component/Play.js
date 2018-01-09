@@ -9,7 +9,7 @@ class Play extends Component {
 
     return (
       <div className="play">
-          <Playground session = {this.props.match.params.sessionId} />  
+          <Playground sessionId = {this.props.match.params.sessionId} />  
       </div>
     );
   }

@@ -14,6 +14,7 @@ export default class PlayerPos extends React.Component{
       this.state = {
         playerX: this.props.playerX,
         playerY: this.props.playerY,};
+
     }
 
     componentWillReceiveProps(nextProps){
@@ -36,10 +37,13 @@ export default class PlayerPos extends React.Component{
 
 
     render(){
-      //console.log("player - " + this.state.playerX + " " + this.state.playerY);
+      
       return (
         <div className = "playerPos" style = {{left : this.state.playerX, top : this.state.playerY }} >
-          <PlayerFrame />
+          <PlayerFrame 
+              action   = { this.props.action }
+              playerId = { this.props.playerId }
+           />
 
         </div>
       );
