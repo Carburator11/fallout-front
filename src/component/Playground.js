@@ -36,106 +36,45 @@ class Playground extends React.Component {
         this.check = [false, ''];
     }
 
-    handleClick(e){
+    handleClick(e){ 
 
-        const blocks = this.blocks;
-        // Note : I was too lazy to implement a proper pathfinding in this project, so blocks are hidden by defaul
-        // Press 'o' to display blocks
-
-        // Note 2 : first plan was to implement pathfinding
-        // The function below corrects the coordinates if Player clicks within a block  
-
-        // So-called "corrected" position will be changed ONLY if Mouse position is inside a block
-        var correctedX = e.clientX;
-        var correctedY = e.clientY;
-
-        // Iterating through blocks...
-        if(this.state.showBlocks){
-            blocks.map((blockItem) => {
-                var insideBlockX = (e.clientX >= blockItem[0]) && ( e.clientX <= ( blockItem[0]+ blockItem[2]) );
-                var insideBlockY = (e.clientY >= blockItem[1]) && ( e.clientY <= ( blockItem[1]+ blockItem[3]) );
-                
-                // If yes, we will update correctedX and Y
-                if( insideBlockX && insideBlockY)                    
-                      { 
-                        console.log("Inside " + blockItem[4] + " - correcting Path");
-
-                        /* This part is a bit complex and not 100% satisfactory  
-                           The function below checks the relative position of the player compared to the block.
-                                                      
-                                    -1-1    0-1    1-1 
-                                    -1 0  |block|  1 0
-                                    -1 1    0 1    1 1
-                        */
-
-                          var testX = (this.state.playerX - blockItem[0])
-                              if(testX < 0)                { /* case -1 */  correctedX = blockItem[0] - 5 }
-                              else if(testX > blockItem[2]){ /* case  1 */  correctedX = blockItem[0] +  blockItem[2] + 5  }
-                              else                         { /* case  0 */  correctedX = blockItem[0] + (blockItem[2] / 2) }  
-
-                          var testY = (this.state.playerY - blockItem[1])
-                              if(testY < 0)                { /* case -1 */  correctedY = blockItem[1] - 5 }
-                              else if(testY > blockItem[3]){ /* case  1 */  correctedY = blockItem[1] +  blockItem[3] + 5  }
-                              else                         { /* case  0 */  correctedY = blockItem[1] + (blockItem[3] / 2) }  
-                      }
-          
-                return(null);            
-                })
-              }
-        this.setState({pathX: correctedX, pathY: correctedY, isActive: true }, 
-          () => { this.checkPos() }
-        )  
+        if(this.state.isIdle){this.setState({pathX: e.clientX, pathY: e.clientY, isIdle: false }, () => { this.checkPos() })  }
     }
 
     checkPos(){
       var diffX = this.state.pathX - this.state.playerX ;
       var diffY = this.state.pathY - this.state.playerY ;
-             if( diffX === 0 && diffY > 0   ){ if(this.state.isIdle){this.move("S",   0,  1) } }
-        else if( diffX === 0 && diffY < 0   ){ if(this.state.isIdle){this.move("N",   0, -1) } }
-        else if( diffX > 0   && diffY === 0 ){ if(this.state.isIdle){this.move("E",   1,  0) } }
-        else if( diffX < 0   && diffY === 0 ){ if(this.state.isIdle){this.move("W",  -1,  0) } }
-        else if( diffX > 0   && diffY > 0   ){ if(this.state.isIdle){this.move("SE",  1,  1) } }
-        else if( diffX > 0   && diffY < 0   ){ if(this.state.isIdle){this.move("NE",  1, -1) } }
-        else if( diffX < 0   && diffY > 0   ){ if(this.state.isIdle){this.move("SW", -1,  1) } }
-        else if( diffX < 0   && diffY < 0   ){ if(this.state.isIdle){this.move("NW", -1, -1) } }
+             if( diffX === 0 && diffY > 0   ){ this.move("S",   0,  1)  }
+        else if( diffX === 0 && diffY < 0   ){ this.move("N",   0, -1)  }
+        else if( diffX > 0   && diffY === 0 ){ this.move("E",   1,  0)  }
+        else if( diffX < 0   && diffY === 0 ){ this.move("W",  -1,  0)  }
+        else if( diffX > 0   && diffY > 0   ){ this.move("SE",  1,  1)  }
+        else if( diffX > 0   && diffY < 0   ){ this.move("NE",  1, -1)  }
+        else if( diffX < 0   && diffY > 0   ){ this.move("SW", -1,  1)  }
+        else if( diffX < 0   && diffY < 0   ){ this.move("NW", -1, -1)  }
         else if( diffX === 0 && diffY === 0 ){ 
-            this.setState({playerDir: "IDLE", isIdle:true});
-            //console.log('IDLE');
+            this.setState({isIdle: true, playerDir: "IDLE"}, ()=> {console.log('isIdle: ' + this.state.isIdle  )});
+   
         }
   }
 
-  move(dir, x, y){
-      var incremX = x;
-      var incremY = y;
-     
-      var that = this;
+move(dir, x, y){
+    this.setState(
+      prevState => (
+          { playerDir: dir,
+            playerX: prevState.playerX + x,
+            playerY: prevState.playerY + y,           
+          }), () => { 
+              setTimeout(  () => { this.checkPos() },  1 )    
+                    })
 
-      this.setState({isIdle : false}, 
-          () => {
-                 setTimeout(
-            () => {
-              that.setState(
-                prevState => (
-                    { playerDir: dir,
-                      playerX: prevState.playerX + incremX,
-                      playerY: prevState.playerY + incremY,
-                      isIdle: true }
-                    ), () => { 
-                          that.checkPos()
-                           } );
-              
-              },
-          1
-        )}
-  );
 }
 
 shoot(){
-  //console.log('Shoot');
   let newArray = this.state.shot;
   let newShoot = [ this.state.playerX +30, this.state.playerY -40 , "shot"+this.shotCount ];
   newArray[this.shotCount] = newShoot;
-  this.setState({ shot:  newArray, playerDir: "shoot"  }) 
+  this.setState({ shot:  newArray, playerDir: "shoot"  }, ()=>{ setTimeout(   this.setState({ isIdle: true }) , 1000 )    }) 
   this.animateShoot(this.shotCount);
   this.shotCount++;
 }
@@ -198,7 +137,6 @@ animateShoot(e){
           }
       }, 50);
 
-
 }
 
 componentDidMount() {
@@ -260,6 +198,7 @@ componentDidMount() {
                 playerY  = { this.state.playerY }
                 action   = { this.state.playerDir }
                 playerId = { this.props.sessionId }
+                isIdle   = { this.state.isIdle }
              />
           
           <Blocks blocks =       { this.state.showBlocks?this.blocks:[] } />

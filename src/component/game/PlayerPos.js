@@ -43,6 +43,7 @@ export default class PlayerPos extends React.Component{
           <PlayerFrame 
               action   = { this.props.action }
               playerId = { this.props.playerId }
+              isIdle   = { this.props.isIdle }
            />
 
         </div>
