@@ -5,7 +5,7 @@ import Blocks from './game/Blocks.js';
 import NPC from './game/NPC.js';
 import Shot from './game/Shot.js';
 import Nuke from './game/Nuke.js';
-
+import bg from '../pic/game/bg1.jpg';
 
 class Playground extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class Playground extends React.Component {
                        pathX:   60 ,
                        pathY:   -50 ,
                        playerX:  60,
-                       playerY:  100,
+                       playerY:  200,
                        playerDir: 'IDLE',
                        isIdle: true,
                        showBlocks: false,
@@ -53,7 +53,7 @@ class Playground extends React.Component {
         else if( diffX < 0   && diffY > 0   ){ this.move("SW", -1,  1)  }
         else if( diffX < 0   && diffY < 0   ){ this.move("NW", -1, -1)  }
         else if( diffX === 0 && diffY === 0 ){ 
-            this.setState({isIdle: true, playerDir: "IDLE"}, ()=> {console.log('isIdle: ' + this.state.isIdle  )});
+            this.setState({ isIdle: true }, ()=> {console.log('isIdle: ' + this.state.isIdle  )});
    
         }
   }
@@ -71,12 +71,12 @@ move(dir, x, y){
 }
 
 shoot(){
-  let newArray = this.state.shot;
-  let newShoot = [ this.state.playerX +30, this.state.playerY -40 , "shot"+this.shotCount ];
-  newArray[this.shotCount] = newShoot;
-  this.setState({ shot:  newArray, playerDir: "shoot"  }, ()=>{ setTimeout(   this.setState({ isIdle: true }) , 1000 )    }) 
-  this.animateShoot(this.shotCount);
-  this.shotCount++;
+    let newArray = this.state.shot;
+    let newShoot = [ this.state.playerX +30, this.state.playerY -40 , "shot"+this.shotCount ];
+    newArray[this.shotCount] = newShoot;
+    this.setState({ shot:  newArray, playerDir: "shoot"  }, ()=>{ setTimeout(   this.setState({ isIdle: true }) , 1000 )    }) 
+    this.animateShoot(this.shotCount);
+    this.shotCount++;
 }
 
 // Argument 'e' is defined by 'shotCount', it is the index of the 'shot' in this.state.shot
@@ -185,9 +185,11 @@ componentDidMount() {
     render() {
 
       return (
-        <div className = "playground" onClick = {this.handleClick} >
-          Left 
+        <div className = "playground" onClick = {this.handleClick} style={{ backgroundImage: "url(" + bg + ")" }}>
+           
           Click to move, 'Space' to shoot  -  {this.props.session}
+          
+          
           <Path 
                 pathX = {this.state.pathX} 
                 pathY = {this.state.pathY}
@@ -196,7 +198,7 @@ componentDidMount() {
           <PlayerPos
                 playerX  = { this.state.playerX }
                 playerY  = { this.state.playerY }
-                action   = { this.state.playerDir }
+                dir   = { this.state.playerDir }
                 playerId = { this.props.sessionId }
                 isIdle   = { this.state.isIdle }
              />
@@ -205,7 +207,7 @@ componentDidMount() {
           <NPC    npcPosition  = { this.state.enemies } />
           <Shot   shotPosition = { this.state.shot} />
           {this.state.cheatMode? <Nuke />:""}
-         
+          
         </div>
       );
     }

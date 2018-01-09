@@ -1,73 +1,73 @@
 import React from 'react';
 import spriteF from '../../pic/game/spriteF.png' ;
 import spriteM from '../../pic/game/spriteM.png';
-var currentDir;
-
 
 
 class PlayerFrame extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        action: "IDLE",
+        dir: this.props.dir,
         topSprite : -420,
         leftStripe: 0,
         spriteImg: '',
-
+        isIdle: this.props.isIdle
       };
-      this.delay = 100;
-      this.dir = { "E":  0,  "W": -70,  "N":  -140, "NE":  -140, "S": -210, "SE": -210,  "SW" : -280, "NW": -350,  "IDLE-E" : -420, "Shoot": -490  };
-      
+      this.delay = 200;
+      this.dir = { "E":  0,  "W": -70,  "N":  -140, "NE":  -140, "S": -210, "SE": -210,  "SW" : -280, "NW": -350,  "none" : -420, "Shoot": -490  };
+      this.ongoingAnimation = false;
     }
     
 
 
 componentWillReceiveProps(nextProps){
-      if( this.state.isIdle === true){
-          this.setState( {leftStripe: 0 })
+      if( nextProps.isIdle === true){
+          this.setState( {
+              leftStripe: 0, 
+              isIdle: nextProps.isIdle
+              });
+          this.ongoingAnimation = false; 
           }
-                      
-      if( this.state.action !== nextProps.action ){                   
+      else{                              
           this.setState({
-              action: nextProps.action,
-              topSprite : this.dir[nextProps.action],
-
+              topSprite: this.dir[nextProps.dir],
+              isIdle:    nextProps.isIdle,
+              dir:       nextProps.dir
               },  () => {
-                      this.animate(); 
+                      if( !this.ongoingAnimation ){this.animate() } 
                         })
-          }
-      
+      }
   }
 
 
-animate(){
-    
-      var newLeft = (this.state.leftStripe <= -540) ? 0 : (this.state.leftStripe - 60);  
-      this.setState( { 
-          leftStripe: newLeft }, () => {
-              console.log('Animate: ' + this.state.action + '  ' + this.state.topStripe + '  '  + this.state.leftStripe);   
-              setTimeout( () => {
-                                this.animate()
+animate(){    
+      if(!this.state.isIdle){
+          console.log('Animate ' + this.state.dir )
+          this.ongoingAnimation = true; 
+          var newLeft = (this.state.leftStripe <= -540) ? 0 : (this.state.leftStripe - 60);  
+          this.setState( { 
+              leftStripe: newLeft }, () => {
+                    setTimeout( () => {
+                          this.animate()
                                 }, this.delay  );             
-                    });
-      
-                
+          }); 
+      }         
 }
 
     render() {
       var  spriteImg=  ( ( (this.props.playerId).substr(0,1) === "M" )? spriteM : spriteF) ;
       return (
-        <div className = "playerFrame">
-          <img 
-              src = {spriteImg} 
-              alt = "player Sprite" 
-              id  = "imgSprite" 
-              style = {{
-                  top: this.state.topSprite,
-                  left: this.state.leftStripe
-                   }}
-          />
-        </div>
+          <div className = "playerFrame">
+              <img 
+                  src = {spriteImg} 
+                  alt = "player Sprite" 
+                  id  = "imgSprite" 
+                  style = {{
+                      top: this.state.topSprite,
+                      left: this.state.leftStripe
+                      }}
+                  />
+          </div>
       );
     }
   }
