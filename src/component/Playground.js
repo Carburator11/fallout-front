@@ -212,10 +212,16 @@ componentDidMount() {
       if(e.key === konami[count]){
               console.log("cheatSequence:  " + count + " " + e.key);
               if(e.key === konami[konami.length - 1]){
-                this.setState({cheatMode: true})             
+                this.setState({cheatMode: true})
+                this.state.enemies.map((el)=>{
+                  this.enemyDie(this.state.enemies.indexOf(el), 0)
+                  }
+                )
+                
+
                 setTimeout(
                   ()=> { this.setState({cheatMode: false, enemies: []});console.log("end of nuke") }
-                , 1400)  
+                , 1800)  
               }
               count++;
           }
