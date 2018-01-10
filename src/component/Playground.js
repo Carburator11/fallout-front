@@ -1,24 +1,24 @@
 import React from 'react';
-import Path from './game/Path.js';
+import Path  from './game/Path.js';
 import PlayerPos from './game/PlayerPos.js';
-import Blocks from './game/Blocks.js';
-import NPC from './game/NPC.js';
+import Blocks    from './game/Blocks.js';
+import NPC  from './game/NPC.js';
 import Shot from './game/Shot.js';
 import Nuke from './game/Nuke.js';
-import bg from '../pic/game/bg1.jpg';
+import bg   from '../pic/game/bg1.jpg';
 
 class Playground extends React.Component {
     constructor(props) {
         super(props);
         this.state = { 
-                       pathX:   60 ,
+                       pathX:    60 ,
                        pathY:   -50 ,
                        playerX:  60,
                        playerY:  200,
                        playerDir: 'IDLE',
-                       isIdle: true,
+                       isIdle:     true,
                        showBlocks: false,
-                       cheatMode: false,
+                       cheatMode:  false,
                        shot: [],
                        enemies: [
                          [500, 150, 50, 50, "cow1", "alive", 0, 0],
@@ -36,12 +36,12 @@ class Playground extends React.Component {
         this.check = [false, ''];
     }
 
-    handleClick(e){ 
-
+handleClick(e){ 
         if(this.state.isIdle){this.setState({pathX: e.clientX, pathY: e.clientY, isIdle: false }, () => { this.checkPos() })  }
     }
 
-    checkPos(){
+// Pathfiding 
+checkPos(){
       var diffX = this.state.pathX - this.state.playerX ;
       var diffY = this.state.pathY - this.state.playerY ;
              if( diffX === 0 && diffY > 0   ){ this.move("S",   0,  1)  }
@@ -57,6 +57,7 @@ class Playground extends React.Component {
    
         }
   }
+
 
 move(dir, x, y){
     this.setState(
@@ -143,12 +144,16 @@ animateShoot(e){
 enemyDie(e, count){
   if(count<10){
     count++;
-    console.log(count);
+    //console.log(count +  " PLAYER:  " + this.props.sessionId.substr(0, 1)  );
     var newEnemies = this.state.enemies ;
     newEnemies[e][6] =  newEnemies[e][6] - 150 ;
-    newEnemies[e][7] =  -200;
+    if((this.props.sessionId.substr(0, 1) === "M" )){
+      newEnemies[e][7] =  -100
+    } else{
+      newEnemies[e][7] =  -200
+    }
+
     this.setState( { enemies: newEnemies  } , ()=> {
-      console.log(this.state.enemies[e][6]) 
       setTimeout( ()=> {this.enemyDie(e, count)} , 150);
     })
     
@@ -214,8 +219,9 @@ componentDidMount() {
               if(e.key === konami[konami.length - 1]){
                 this.setState({cheatMode: true})
                 this.state.enemies.map((el)=>{
-                  this.enemyDie(this.state.enemies.indexOf(el), 0)
-                  }
+                  this.enemyDie(this.state.enemies.indexOf(el), 0);
+                  return null
+                  } 
                 )
                 
 

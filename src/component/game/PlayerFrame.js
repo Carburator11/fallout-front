@@ -42,7 +42,6 @@ componentWillReceiveProps(nextProps){
 
 animate(){    
       if(!this.state.isIdle){
-          console.log('Animate ' + this.state.dir )
           this.ongoingAnimation = true; 
           var newLeft = (this.state.leftStripe <= -540) ? 0 : (this.state.leftStripe - 60);  
           this.setState( { 

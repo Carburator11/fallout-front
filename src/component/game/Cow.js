@@ -22,7 +22,7 @@ export default class Cow extends React.Component{
         return(
             <div className= "cowDiv">   
             <img style= {{  left: this.state.spriteX,
-                            top: this.state.spriteY,
+                            top:  this.state.spriteY,
                             }}
                 src={spriteCow}
                 id="cowSprite"
