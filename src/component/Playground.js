@@ -21,9 +21,9 @@ class Playground extends React.Component {
                        cheatMode: false,
                        shot: [],
                        enemies: [
-                         [500, 150, 50, 50, "cow1"],
-                         [500, 350, 50, 50, "cow2"],
-                         [400, 400, 50, 50, "cow3"]]
+                         [500, 150, 50, 50, "cow1", "alive", 0, 0],
+                         [500, 350, 50, 50, "cow2", "alive", 0, 0],
+                         [400, 400, 50, 50, "cow3", "alive", 0, 0]]
                      };
         this.handleClick = this.handleClick.bind(this);
         this.blocks = [
@@ -107,7 +107,8 @@ animateShoot(e){
         
         //console.log('checkImpact');
         this.checkImpact(e);
-
+        
+        // Check if the shot is outside the playground
         // Hardcoded playground width ! ( = 790 )
         if(this.state.shot[e][0] > 790){
             clearInterval(intervID);
@@ -119,11 +120,11 @@ animateShoot(e){
         else{
             if(this.check[0]){
                 // this.check[0] is set to 'true' by function checkImpact
-                console.log('Target shot - ' + this.check[1]);
+                // this.check[1] is the index of the Enemy in this.state.enemies
                 clearInterval(intervID);
                 let newArray = this.state.shot;
                 delete newArray[e];       
-                delete this.state.enemies[this.check[1]];
+                this.enemyShot(this.check[1]);
                 this.check = [false, ''];
                 this.setState({ shot:  newArray  });
                 }                  
@@ -133,11 +134,57 @@ animateShoot(e){
                 let newArray = this.state.shot;
                 newArray[e][0] += 20;
                 this.setState({ shot:  newArray  });
-              }                   
+              }                    
           }
       }, 50);
 
 }
+
+enemyDie(e, count){
+  if(count<10){
+    count++;
+    console.log(count);
+    var newEnemies = this.state.enemies ;
+    newEnemies[e][6] =  newEnemies[e][6] - 150 ;
+    newEnemies[e][7] =  -200;
+    this.setState( { enemies: newEnemies  } , ()=> {
+      console.log(this.state.enemies[e][6]) 
+      setTimeout( ()=> {this.enemyDie(e, count)} , 150);
+    })
+    
+  }
+}
+
+enemyShot(e){
+    // IF = you can ONLY shot 'alive' enemies 
+    if(this.state.enemies[e][5] === "alive"){
+        let newArray = this.state.enemies;
+        newArray[e][5] = "shot";
+        this.setState({enemies: newArray}, ()=>{ 
+                console.log(this.state.enemies[e][4] + ' - ' + this.state.enemies[e][5]);
+                this.enemyDie(e, 0);  
+                
+                setTimeout(
+                  ()=>{
+                    console.log(this.state.enemies[e][4] + " killed." );
+                    let newArray = this.state.enemies; 
+                    delete newArray[e];
+                    this.setState({ enemies:  newArray  });
+                    
+                    
+                  }   , 1800)
+
+        });
+        
+          
+
+
+
+
+        
+    } 
+}
+
 
 componentDidMount() {
   
@@ -198,7 +245,7 @@ componentDidMount() {
           <PlayerPos
                 playerX  = { this.state.playerX }
                 playerY  = { this.state.playerY }
-                dir   = { this.state.playerDir }
+                dir   =    { this.state.playerDir }
                 playerId = { this.props.sessionId }
                 isIdle   = { this.state.isIdle }
              />

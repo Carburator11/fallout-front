@@ -13,12 +13,15 @@ export default function NPC(props){
     <div style= {{ 
         left: el[0],
         top: el[1],
-        width: el[2], 
-        height: el[3]
+        width: 50, 
+        height: 50
         }}  className= "npc"
             id = { el[4]}
             key= { el[4]} >
-    <Cow />
+    <Cow
+            spriteX = {el[6]}
+            spriteY = {el[7]}
+     />
     </div>
     );
 

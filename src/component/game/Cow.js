@@ -2,12 +2,34 @@ import React from 'react';
 import spriteCow from '../../pic/game/spriteCow.png' ;
 
 
-export default function Cow(props){ 
+export default class Cow extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            spriteX: this.props.spriteX,
+            spriteY: this.props.spriteY
+        };
 
-return(
-    <div className= "cowDiv">
-    <img style= {{ top: 0, left: 0 }} src={spriteCow} id="cowSprite" />
-    </div>    );
+    }
+    componentWillReceiveProps(nextProps){
+      
+        this.setState({
+            spriteX: nextProps.spriteX,
+            spriteY: nextProps.spriteY
+            })  
+    }
+    render(){
+        return(
+            <div className= "cowDiv">   
+            <img style= {{  left: this.state.spriteX,
+                            top: this.state.spriteY,
+                            }}
+                src={spriteCow}
+                id="cowSprite"
+                alt="Enemy (Brahmin cow)" />    
+            </div>
+            );
+    }
 
+}
 
-};
