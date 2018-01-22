@@ -66,6 +66,17 @@ handleClick(e){
       
 }
 
+
+
+startAnimation(callback) {
+  
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      callback();
+    });
+  });
+}
+
 pause(){
     console.log('PAUSE');
     this.setState({
@@ -75,13 +86,13 @@ pause(){
 }
 
 gameOver(){
-  this.pause();
+  console.log('GAME OVER');
   this.setState({
     pause: true,
     isIdle: true,
     gameOver: true
   });  
-  console.log('GAME OVER');
+
 }
 
 checkPos(){
@@ -112,7 +123,7 @@ move(dir, x, y){
                 playerX: prevState.playerX + x,
                 playerY: prevState.playerY + y,           
               }), () => { 
-                  setTimeout(  () => { this.checkPos() },  1 )    
+                  window.requestAnimationFrame(  () => { this.checkPos() } )    
                         })
 
     }
@@ -123,7 +134,7 @@ shoot(){
         let newArray = this.state.shot;
         let newShoot = [ this.state.playerX +30, this.state.playerY -40 , "shot"+this.shotCount ];
         newArray[this.shotCount] = newShoot;
-        this.setState({ shot:  newArray, playerDir: "shoot"  }, ()=>{ setTimeout(   this.setState({ isIdle: true }) , 1000 )    }) 
+        this.setState({ shot:  newArray }, ()=>{ setTimeout(   this.setState({ isIdle: true }) , 1000 )    }) 
         this.animateShoot(this.shotCount);
         this.shotCount++;
     } 
@@ -157,8 +168,7 @@ animateShoot(e){
         ()=>{
             this.checkImpact(e);
             
-            // Check if the shot is outside the playground
-            // Hardcoded playground width ! ( = 790 )
+            // CASE : shot out of playground  (hardcoded playground width = 790 ! )
             if(this.state.shot[e][0] > 790){
                 clearInterval(intervID);
                 let newArray = this.state.shot;
@@ -168,6 +178,7 @@ animateShoot(e){
 
             else{
 
+                // CASE : an enemy is shot
                 if(this.shootStatus.anEnemyHasBeenShot){
                     clearInterval(intervID);
                     let newArray = this.state.shot;
@@ -182,7 +193,7 @@ animateShoot(e){
                     }                  
 
                 else{
-                    // No collision...
+                    // CASE : no collision, the shot keeps moving...
                     let newArray = this.state.shot;
                     newArray[e][0] += 20;
                     this.setState({ shot:  newArray  });
@@ -279,6 +290,19 @@ decrTimeLeft(){
   } else {
     setTimeout(  ()=> {this.decrTimeLeft() }, 1000);
   }
+}
+
+bonusTime(){
+  if(this.statekillCount > 0){
+
+      if(this.statekillCount % 5 ){
+        console.log("Bonus time + 5s");
+        this.setState( (prevState)=> ({ timeLeft: prevState.timeLeft + 3 }))
+      }
+
+
+
+    }
 }
 
 

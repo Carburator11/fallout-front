@@ -9,10 +9,10 @@ export default class GameOver extends React.Component{
     render(){
         return(
             <div id = "gameOver">   
-                Well done !
-                Score: {this.props.playerScore}
-                Enemy killed: {this.props.killCount}
-                Shots fired:  {this.props.shotCount}
+                Well done !<br/>
+                Score: {this.props.playerScore} <br/>
+                Enemy killed: {this.props.killCount} <br/>
+                Shots fired:  {this.props.shotCount} <br/>
             </div>
             );
     }
