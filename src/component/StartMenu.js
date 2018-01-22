@@ -21,7 +21,7 @@ class StartMenu extends Component {
   }
   
   render() {
-      var rdm = "Random-Player-" + Math.floor(Math.random()*2046);
+      var rdm = "Player-" + Math.floor(Math.random()*2046);
       return (
           <div className = "content start">
                 <form className = "startMenu" onSubmit={this.handleSubmit}>

@@ -73,3 +73,19 @@
 #cowSprite{
     position: absolute;
 }
+
+#timer{
+    position: absolute;
+    top: 80px;
+    left: 20px;
+}
+
+#gameOver{
+    position: absolute;
+    background: white;
+    top: 200px;
+    left: 200px;
+    width: 200px;
+    height: 200px;
+    color: black;
+}
