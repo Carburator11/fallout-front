@@ -33,7 +33,12 @@ class Playground extends React.Component {
 
         
         this.shotCount = 0;
-        this.check = [false, ''];
+        //this.check = [false, ''];
+        this.shootStatus = {
+          anEnemyHasBeenShot: false,
+          indexOfEnemyShot: ''
+        }
+
     }
 
 handleClick(e){ 
@@ -83,15 +88,19 @@ shoot(){
 // Argument 'e' is defined by 'shotCount', it is the index of the 'shot' in this.state.shot
 // Each element of this.state.shot is (also) an array containing the position of each 'shot'
 checkImpact(e) {
-  this.state.enemies.map((el) =>{
+  this.state.enemies.forEach((el) =>{
     var margin = 10;
     var shotOnX = ( (this.state.shot[e][0] > ( el[0] - margin) ) && ( this.state.shot[e][0] < ( el[0] + el[2] + margin  ) ) );
     var shotOnY = ( (this.state.shot[e][1] > ( el[1] - margin) ) && ( this.state.shot[e][1] < ( el[1] + el[3] + margin  ) ) );
     if(shotOnX  &&  shotOnY){
-        this.check[0] = true;
-        this.check[1] = this.state.enemies.indexOf(el);
+        //this.check[0] = true;
+        //this.check[1] = this.state.enemies.indexOf(el);
+        this.shootStatus = {
+          anEnemyHasBeenShot: true,
+          indexOfEnemyShot: this.state.enemies.indexOf(el)
+        }
     }
-    return null ;
+    
   })
 }
 
@@ -119,14 +128,21 @@ animateShoot(e){
             }
 
         else{
-            if(this.check[0]){
+            //if(this.check[0]){
+            if(this.shootStatus.anEnemyHasBeenShot){
                 // this.check[0] is set to 'true' by function checkImpact
                 // this.check[1] is the index of the Enemy in this.state.enemies
                 clearInterval(intervID);
                 let newArray = this.state.shot;
-                delete newArray[e];       
-                this.enemyShot(this.check[1]);
-                this.check = [false, ''];
+                delete newArray[e];
+
+                //this.enemyShot(this.check[1]);
+                this.enemyShot(this.shootStatus.indexOfEnemyShot);
+                //this.check = [false, ''];
+                this.shootStatus = {
+                  anEnemyHasBeenShot: false,
+                  indexOfEnemyShot: ''
+                }
                 this.setState({ shot:  newArray  });
                 }                  
 
@@ -158,6 +174,12 @@ enemyDie(e, count){
     })
     
   }
+}
+
+spawnEnemy(){
+  
+
+
 }
 
 enemyShot(e){
@@ -218,9 +240,8 @@ componentDidMount() {
               console.log("cheatSequence:  " + count + " " + e.key);
               if(e.key === konami[konami.length - 1]){
                 this.setState({cheatMode: true})
-                this.state.enemies.map((el)=>{
-                  this.enemyDie(this.state.enemies.indexOf(el), 0);
-                  return null
+                this.state.enemies.forEach((el)=>{
+                  this.enemyDie(this.state.enemies.indexOf(el), 0)
                   } 
                 )
                 
