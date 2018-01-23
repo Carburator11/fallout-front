@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import about from '../pic/about.jpg';
 
 
-
+  
 
 
 class About extends Component {

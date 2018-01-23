@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './css/index.css';
 import StartMenu from './component/StartMenu';
 import Home from './component/Home';
 import About from './component/About';
@@ -12,12 +12,9 @@ import {unregister} from './registerServiceWorker';
 import {BrowserRouter, Link, NavLink, Switch, Route} from 'react-router-dom';
 
 ReactDOM.render(
-    <div>
-    
+    <div>  
     <BrowserRouter>
         <div>
-        
-        
             <div className= "head">
                 <ul>
                     <li id="reactSign"><Link to="/home">&#9762;</Link></li>

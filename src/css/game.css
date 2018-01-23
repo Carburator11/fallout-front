@@ -76,16 +76,51 @@
 
 #timer{
     position: absolute;
-    top: 80px;
+    top: 60px;
     left: 20px;
 }
 
 #gameOver{
+    width: 600px;
+    height: 375px;
     position: absolute;
-    background: white;
-    top: 200px;
-    left: 200px;
-    width: 200px;
-    height: 200px;
-    color: black;
+    left: 100px;
+    top: 60px;
+    text-align: center;
+    background: url("../pic/score.png");
+    background-repeat: repeat;
+    background-size: contain;
+    background-position-x: left;
+    background-position-y: top;
+    z-index: 99;
+    border-radius: 25px;
+    
+    color: #00ad00;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius : 5px;
+ 
+}
+
+.scores{
+    padding-top: 170px;
+    width: 90%;
+    display: inline-block;}
+
+.gameOverBtn{
+    width: 90%;
+    text-align: center;  
+    display: inline-block;
+}
+
+.gameOverBtn form{
+    margin: 5px;
+    display: inline-block;
+
+    }
+
+.gameOverBtn input{
+    border: 2px solid #00ad00; 
+    display: inline-block;
+    border-radius : 5px;
 }

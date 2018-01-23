@@ -74,7 +74,7 @@ body {
   width: 600px;
   margin: 15px 20%;
   text-align: center;
-  background: url("pic/welcome.jpg");
+  background: url("../pic/welcome.jpg");
   background-repeat: no-repeat;
   background-size: contain;
   background-position-x: left;
@@ -86,7 +86,7 @@ body {
   width: 600px;
   margin: 20px 20%;
   text-align: center;
-  background: url("pic/start.jpg");
+  background: url("../pic/start.jpg");
   background-repeat: repeat;
   background-size: contain;
   background-position-x: left;

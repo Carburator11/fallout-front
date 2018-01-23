@@ -210,7 +210,7 @@ enemyShot(e){
         let newArray = this.state.enemies;
         newArray[e][5] = "shot";
         // There are two different animations for each "M" and "F" character, each one on a different Sprite row
-        if((this.props.sessionId.substr(0, 1) === "M" )){
+        if((this.props.session.substr(0, 1) === "M" )){
             newArray[e][7] =  -100;
         } else{
             newArray[e][7] =  -200;
@@ -219,7 +219,7 @@ enemyShot(e){
             console.log(this.state.enemies[e][4] + ' - ' + this.state.enemies[e][5]);
             this.killCount++;
             this.playerScore += 15;
-            console.log(this.props.sessionId + " :" +  this.playerScore + " pts (kills: "  +  this.killCount  + ", shots: " + this.shotCount  +")" );
+            console.log(this.props.session + " :" +  this.playerScore + " pts (kills: "  +  this.killCount  + ", shots: " + this.shotCount  +")" );
 
             // Animation 'enemyDie' will loop 10 times starting from 0
             this.enemyDie(e, 0);  
@@ -368,19 +368,24 @@ componentDidMount() {
       return (
         <div className = "playground" onClick = {this.handleClick} style={{ backgroundImage: "url(" + bg + ")" }}>
            
-          Click to move, 'Space' to shoot  -  {this.props.session}
+          Click to move, 'Space' to shoot  {this.props.session}
           
           <Timer time= {this.state.timeLeft} />
+          {this.state.gameOver? <GameOver
+              playerScore = {this.playerScore}
+              killCount   = {this.killCount}
+              shotCount   = {this.shotCount}
+          />:""}  
           <Path 
                 pathX = {this.state.pathX} 
                 pathY = {this.state.pathY}
 
-           />)
+           />
           <PlayerPos
                 playerX  = { this.state.playerX }
                 playerY  = { this.state.playerY }
                 dir   =    { this.state.playerDir }
-                playerId = { this.props.sessionId }
+                playerId = { this.props.session }
                 isIdle   = { this.state.isIdle }
              />
           
@@ -388,11 +393,7 @@ componentDidMount() {
           <NPC    npcPosition  = { this.state.enemies } />
           <Shot   shotPosition = { this.state.shot} />
           {this.state.cheatMode? <Nuke />:""}
-          {this.state.gameOver? <GameOver
-              playerScore = {this.playerScore}
-              killCount   = {this.killCount}
-              shotCount   = {this.shotCount}
-          />:""}         
+         
         </div>
       );
     }
